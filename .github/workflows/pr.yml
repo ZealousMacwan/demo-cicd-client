@@ -28,6 +28,22 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
+      - name: Extract Base Version from Branch Name
+        id: extract_version
+        run: |
+          # Get the current branch name
+          branch_name=$(echo "${GITHUB_REF##*/}")
+        
+          # Check if it's in the format dev/X.Y.Z (adjust this for release branches)
+          if [[ $branch_name =~ dev/([0-9]+\.[0-9]+\.[0-9]+) ]]; then
+            base_version="${BASH_REMATCH[1]}"
+          else
+            # Default to 1.0.0 if no specific base version is found
+            base_version="1.0.0"
+          fi
+          echo "Base version: $base_version"
+          echo "base_version=$base_version" >> $GITHUB_ENV          
+
       - name: Get Git Commit Hash
         id: vars
         run: echo "commit_hash=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
