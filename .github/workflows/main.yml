@@ -74,7 +74,7 @@ jobs:
 
       - name: Push Docker Image with Version and Commit Hash
         run: |
-          docker push ${{} secrets.DOCKER_USERNAME }}/demo-cicd-client:${{ env.version }}-${{ env.commit_hash }}
+          docker push ${{ secrets.DOCKER_USERNAME }}/demo-cicd-client:${{ env.version }}-${{ env.commit_hash }}
 
       - name: Run Semantic Release
         env:
