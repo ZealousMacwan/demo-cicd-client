@@ -21,6 +21,9 @@ jobs:
         with:
           node-version: 16
 
+      - name: Install Semantic Release
+        run: npm install -g semantic-release
+
       - name: Install Dependencies
         run: npm install
 
