@@ -1,16 +1,15 @@
-
-name: Release Workflow
+name: PR Workflow
 
 on:
-  push:
+  pull_request:
     branches:
       - main
       - dev/*
       - release/*
 
 jobs:
-  release:
-    name: Semantic Release with Docker
+  build:
+    name: Build Docker Image for PR
     runs-on: ubuntu-latest
 
     steps:
@@ -45,7 +44,7 @@ jobs:
             base_version="1.0.0"
           fi
           echo "Base version: $base_version"
-          echo "base_version=$base_version" >> $GITHUB_ENV        
+          echo "base_version=$base_version" >> $GITHUB_ENV          
 
       - name: Get Git Commit Hash
         id: vars
@@ -58,20 +57,7 @@ jobs:
           echo "version=$version" >> $GITHUB_ENV
 
       - name: Build Docker Image with Version and Commit Hash
-        run: |
-          docker build -t ${ secrets.DOCKER_USERNAME }/your-image-name:${{ env.version }}-${{ env.commit_hash }} .
-
-      - name: Log in to Docker Hub
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        run: echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-
-      - name: Push Docker Image with Version and Commit Hash
         run: |
-          docker push ${ secrets.DOCKER_USERNAME }/your-image-name:${{ env.version }}-${{ env.commit_hash }}
-
-      - name: Run Semantic Release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx semantic-release --tag "${{ env.base_version }}"
+          docker build -t $DOCKER_USERNAME/demo-cicd-client:${{ env.version }}-${{ env.commit_hash }} .
