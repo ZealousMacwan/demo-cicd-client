@@ -4,16 +4,6 @@
     { "name": "dev/**", "prerelease": "dev" }, // Adds '-dev' suffix to the version
     { "name": "release/**", "prerelease": "release" } // Adds '-release' suffix
   ],
-  "release": {
-    "verifyConditions": {
-      "path": "semantic-release-docker",
-      "registryUrl": "docker.io" 
-    },
-    "publish": {
-      "path": "semantic-release-docker",
-      "name": "${DOCKER_USERNAME}/demo-cicd-client"
-    }
-  },
   "plugins": [
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",

@@ -24,8 +24,7 @@ jobs:
       - name: Install Dependencies
         run: |
           npm install --save-dev semantic-release @semantic-release/commit-analyzer @semantic-release/release-notes-generator @semantic-release/changelog @semantic-release/github @semantic-release/git
-          npm install --save-dev semantic-release-docker
-          
+
       - name: Install Dependencies
         run: npm install
 
@@ -41,5 +40,5 @@ jobs:
 
       - name: Build Docker Image with Version and Commit Hash
         run: |
-          docker build -t your-dockerhub-username/your-image-name:${{ env.version }}-${{ env.commit_hash }} .
-
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/demo-cicd-client:${{ env.version }}-${{ env.commit_hash }} .
+          
