@@ -52,6 +52,8 @@ jobs:
         run: echo "commit_hash=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
       - name: Get Version from Semantic Release
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}      
         id: get_version
         run: |
           version=$(npx semantic-release --dry-run --tag "${{ env.base_version }}"| grep -oP 'next version is \K.*')
