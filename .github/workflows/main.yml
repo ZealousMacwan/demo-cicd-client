@@ -59,11 +59,12 @@ jobs:
         id: get_version
         run: |
           version=$(npx semantic-release --dry-run --tag "${{ env.base_version }}"| grep -oE 'next version is [0-9]+\.[0-9]+\.[0-9]+' | awk '{print $4}')
+          echo "Version: $version"
           echo "version=$version" >> $GITHUB_ENV
 
       - name: Build Docker Image with Version and Commit Hash
         run: |
-          docker build -t ${ secrets.DOCKER_USERNAME }/your-image-name:${{ env.version }}-${{ env.commit_hash }} .
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/demo-cicd-client:${{ env.version }}-${{ env.commit_hash }} .
 
       - name: Log in to Docker Hub
         env:
@@ -73,7 +74,7 @@ jobs:
 
       - name: Push Docker Image with Version and Commit Hash
         run: |
-          docker push ${ secrets.DOCKER_USERNAME }/your-image-name:${{ env.version }}-${{ env.commit_hash }}
+          docker push ${{} secrets.DOCKER_USERNAME }}/demo-cicd-client:${{ env.version }}-${{ env.commit_hash }}
 
       - name: Run Semantic Release
         env:
