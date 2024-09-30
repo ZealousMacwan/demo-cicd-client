@@ -1,32 +1,24 @@
 {
   "branches": [
-    { "name": "main", "prerelease": false },    
-    { "name": "dev/**", "prerelease": "dev" }, 
-    { "name": "release/**", "prerelease": "release" } 
+    { "name": "main", "prerelease": false }, // For production releases (no suffix)
+    { "name": "dev/**", "prerelease": "dev" }, // Adds '-dev' suffix to the version
+    { "name": "release/**", "prerelease": "release" } // Adds '-release' suffix
   ],
+  "release": {
+    "verifyConditions": {
+      "path": "semantic-release-docker",
+      "registryUrl": "docker.io" 
+    },
+    "publish": {
+      "path": "semantic-release-docker",
+      "name": "${DOCKER_USERNAME}/demo-cicd-client"
+    }
+  },
   "plugins": [
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",
     "@semantic-release/changelog",
     "@semantic-release/github",
-    "@semantic-release/git",
-    "@semantic-release/docker"
-  ],
-  "verifyConditions": ["@semantic-release/github", "@semantic-release/docker"],
-  "prepare": [
-    "@semantic-release/changelog",
-    {
-      "path": "@semantic-release/git",
-      "assets": ["CHANGELOG.md"]
-    }
-  ],
-  "publish": [
-    {
-      "path": "@semantic-release/github"
-    },
-    {
-      "path": "@semantic-release/docker",
-      "name": "${DOCKER_USERNAME}/demo-ci-cd-client"
-    }
+    "@semantic-release/git"
   ]
 }

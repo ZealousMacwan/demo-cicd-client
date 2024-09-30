@@ -24,8 +24,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          npm install --save-dev semantic-release @semantic-release/commit-analyzer @semantic-release/release-notes-generator @semantic-release/changelog @semantic-release/github @semantic-release/git @semantic-release/docker
-              
+          npm install --save-dev semantic-release semantic-release-docker @semantic-release/commit-analyzer @semantic-release/release-notes-generator @semantic-release/changelog @semantic-release/github @semantic-release/git    
 
       - name: Install Dependencies
         run: npm install
