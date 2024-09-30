@@ -65,25 +65,25 @@ jobs:
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         run: |
-          docker build -t $DOCKER_USERNAME/demo-cicd-client:${{ env.version }}-${{ env.commit_hash }} .
+          docker build -t ${{ env.DOCKER_USERNAME }}/demo-cicd-client:${{ env.version }}-${{ env.commit_hash }} .
 
       - name: Build Docker Image with Version and Commit Hash
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         run: |
-          docker build -t $DOCKER_USERNAME/demo-cicd-client:${{ env.version }}-${{ env.commit_hash }} .
+          docker build -t ${{ env.DOCKER_USERNAME }}/demo-cicd-client:${{ env.version }}-${{ env.commit_hash }} .
 
       - name: Log in to Docker Hub
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        run: echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        run: echo "${{ env.DOCKER_PASSWORD }}" | docker login -u "${{ env.DOCKER_USERNAME}}" --password-stdin
 
       - name: Push Docker Image with Version and Commit Hash
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}      
         run: |
-          docker push $DOCKER_USERNAME/demo-cicd-client:${{ env.version }}-${{ env.commit_hash }}
+          docker push ${{ env.DOCKER_USERNAME }}/demo-cicd-client:${{ env.version }}-${{ env.commit_hash }}
 
       - name: Run Semantic Release
         env:

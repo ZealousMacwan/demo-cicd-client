@@ -64,10 +64,10 @@ jobs:
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         run: |
-          docker build -t $DOCKER_USERNAME/demo-cicd-client:${{ env.version }}-${{ env.commit_hash }} .
+          docker build -t ${{ env.DOCKER_USERNAME }}/demo-cicd-client:${{ env.version }}-${{ env.commit_hash }} .
 
       - name: Build Docker Image with Version and Commit Hash
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         run: |
-          docker build -t $DOCKER_USERNAME/demo-cicd-client:${{ env.version }}-${{ env.commit_hash }} .
+          docker build -t ${{ env.DOCKER_USERNAME }}/demo-cicd-client:${{ env.version }}-${{ env.commit_hash }} .
