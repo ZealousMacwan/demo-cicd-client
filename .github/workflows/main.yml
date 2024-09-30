@@ -58,18 +58,19 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}      
         id: get_version
         run: |
-          version=$(npx semantic-release --dry-run --tag "${{ env.base_version }}"| grep -oE 'next .* version is [0-9]+\.[0-9]+\.[0-9]+' | awk '{print $5}')
-          # Check if the version is empty
-          if [[ -z "$version" ]]; then
-            echo "Error: Version could not be determined."
-            exit 1  # Fail the step
-          else
-            echo "Version: $version"
-            echo "version=$version" >> $GITHUB_ENV
-          fi
-          version=${{ env.NEXT_VERSION}}
-          echo "Next version: $version"
-          echo "version=$version" >> $GITHUB_ENV
+          npx semantic-release --dry-run --tag "${{ env.base_version }}"
+
+      - name: Save next release version to environment
+        run: echo "NEXT_VERSION=${{ steps.get_version.outputs.nextRelease.version }}" >> $GITHUB_ENV
+
+      - name: Display next version
+        run: echo "Next version to release is $NEXT_VERSION"          
+
+      - name: Build Docker Image with Version and Commit Hash
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        run: |
+          docker build -t $DOCKER_USERNAME/demo-cicd-client:$NEXT_VERSION-${{ env.commit_hash }} .
 
       - name: Build Docker Image with Version and Commit Hash
         env:
