@@ -33,12 +33,12 @@ jobs:
         id: extract_version
         run: |
           # Get the current branch name
-          branch_name=$(echo "${GITHUB_REF##*/}")
+          branch_version=$(echo "${GITHUB_REF##*/}")
           echo "Full Reference: $GITHUB_REF"
-          echo "Extracted branch name: $branch_name"
+          echo "Extracted branch name: $branch_version"
           
-          # Check if it's in the format dev/X.Y.Z (adjust this for release branches)
-          if [[ $branch_name =~ dev/([0-9]+\.[0-9]+\.[0-9]+) ]]; then
+          # Check if it's in the format X.Y.Z (adjust this for release branches)
+          if [[ $branch_version =~ ([0-9]+\.[0-9]+\.[0-9]+) ]]; then
             base_version="${BASH_REMATCH[1]}"
             echo "Branch version found: $base_version"
           else
