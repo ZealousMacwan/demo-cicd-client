@@ -38,8 +38,10 @@ jobs:
           # Check if it's in the format dev/X.Y.Z (adjust this for release branches)
           if [[ $branch_name =~ dev/([0-9]+\.[0-9]+\.[0-9]+) ]]; then
             base_version="${BASH_REMATCH[1]}"
+            echo "Branch version found: $base_version"
           else
             # Default to 1.0.0 if no specific base version is found
+            echo "Branch version not found. Using default version: 1.0.0"
             base_version="1.0.0"
           fi
           echo "Base version: $base_version"
@@ -52,12 +54,12 @@ jobs:
       - name: Get Version from Semantic Release
         id: get_version
         run: |
-          version=$(npx semantic-release --dry-run --tag ${base_version}| grep -oP 'next version is \K.*')
+          version=$(npx semantic-release --dry-run --tag "${{ env.base_version }}"| grep -oP 'next version is \K.*')
           echo "version=$version" >> $GITHUB_ENV
 
       - name: Build Docker Image with Version and Commit Hash
         run: |
-          docker build -t your-dockerhub-username/your-image-name:${{ env.version }}-${{ env.commit_hash }} .
+          docker build -t ${ secrets.DOCKER_USERNAME }/your-image-name:${{ env.version }}-${{ env.commit_hash }} .
 
       - name: Log in to Docker Hub
         env:
@@ -67,9 +69,9 @@ jobs:
 
       - name: Push Docker Image with Version and Commit Hash
         run: |
-          docker push your-dockerhub-username/your-image-name:${{ env.version }}-${{ env.commit_hash }}
+          docker push ${ secrets.DOCKER_USERNAME }/your-image-name:${{ env.version }}-${{ env.commit_hash }}
 
       - name: Run Semantic Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx semantic-release --tag ${base_version}
+        run: npx semantic-release --tag "${{ env.base_version }}"

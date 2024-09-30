@@ -40,6 +40,7 @@ jobs:
             echo "Branch version found: $base_version"
           else
             # Default to 1.0.0 if no specific base version is found
+            echo "Branch version not found. Using default version: 1.0.0"
             base_version="1.0.0"
           fi
           echo "Base version: $base_version"
@@ -52,7 +53,7 @@ jobs:
       - name: Get Version from Semantic Release
         id: get_version
         run: |
-          version=$(npx semantic-release --dry-run --tag ${base_version}| grep -oP 'next version is \K.*')
+          version=$(npx semantic-release --dry-run --tag "${{ env.base_version }}"| grep -oP 'next version is \K.*')
           echo "version=$version" >> $GITHUB_ENV
 
       - name: Build Docker Image with Version and Commit Hash
