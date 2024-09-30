@@ -23,7 +23,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          npm install --save-dev semantic-release @semantic-release/commit-analyzer @semantic-release/release-notes-generator @semantic-release/changelog @semantic-release/github @semantic-release/git
+          npm install --save-dev semantic-release @semantic-release/exec @semantic-release/commit-analyzer @semantic-release/release-notes-generator @semantic-release/changelog @semantic-release/github @semantic-release/git
 
       - name: Install Dependencies
         run: npm install
@@ -32,10 +32,12 @@ jobs:
         id: extract_version
         run: |
           # Get the current branch name
-          branch_name=$(echo "${GITHUB_REF##*/}")
-        
-          # Check if it's in the format dev/X.Y.Z (adjust this for release branches)
-          if [[ $branch_name =~ dev/([0-9]+\.[0-9]+\.[0-9]+) ]]; then
+          branch_version=$(echo "${GITHUB_REF##*/}")
+          echo "Full Reference: $GITHUB_REF"
+          echo "Extracted branch name: $branch_version"
+          
+          # Check if it's in the format X.Y.Z (adjust this for release branches)
+          if [[ $branch_version =~ ([0-9]+\.[0-9]+\.[0-9]+) ]]; then
             base_version="${BASH_REMATCH[1]}"
             echo "Branch version found: $base_version"
           else
@@ -44,16 +46,28 @@ jobs:
             base_version="1.0.0"
           fi
           echo "Base version: $base_version"
-          echo "base_version=$base_version" >> $GITHUB_ENV          
+          echo "base_version=$base_version" >> $GITHUB_ENV        
 
       - name: Get Git Commit Hash
         id: vars
         run: echo "commit_hash=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
       - name: Get Version from Semantic Release
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}      
         id: get_version
         run: |
-          version=$(npx semantic-release --dry-run --tag "${{ env.base_version }}"| grep -oP 'next version is \K.*')
+          version=$(npx semantic-release --dry-run --tag "${{ env.base_version }}"| grep -oE 'next .* version is [0-9]+\.[0-9]+\.[0-9]+' | awk '{print $5}')
+          # Check if the version is empty
+          if [[ -z "$version" ]]; then
+            echo "Error: Version could not be determined."
+            exit 1  # Fail the step
+          else
+            echo "Version: $version"
+            echo "version=$version" >> $GITHUB_ENV
+          fi
+          version=${{ env.NEXT_VERSION}}
+          echo "Next version: $version"
           echo "version=$version" >> $GITHUB_ENV
 
       - name: Build Docker Image with Version and Commit Hash
