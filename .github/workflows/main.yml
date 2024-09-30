@@ -24,7 +24,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          npm install --save-dev semantic-release @semantic-release/commit-analyzer @semantic-release/release-notes-generator @semantic-release/changelog @semantic-release/github @semantic-release/git
+          npm install --save-dev semantic-release @semantic-release/exec @semantic-release/commit-analyzer @semantic-release/release-notes-generator @semantic-release/changelog @semantic-release/github @semantic-release/git
 
       - name: Install Dependencies
         run: npm install
@@ -67,6 +67,9 @@ jobs:
             echo "Version: $version"
             echo "version=$version" >> $GITHUB_ENV
           fi
+          version=${{ env.NEXT_VERSION}}
+          echo "Next version: $version"
+          echo "version=$version" >> $GITHUB_ENV
 
       - name: Build Docker Image with Version and Commit Hash
         run: |

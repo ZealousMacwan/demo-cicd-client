@@ -9,6 +9,10 @@
     "@semantic-release/release-notes-generator",
     "@semantic-release/changelog",
     "@semantic-release/github",
-    "@semantic-release/git"
+    "@semantic-release/git",
+    {
+      "path": "@semantic-release/exec",
+      "cmd": "echo 'NEXT_VERSION=${nextRelease.version}' >> $GITHUB_ENV"
+    }
   ]
 }
