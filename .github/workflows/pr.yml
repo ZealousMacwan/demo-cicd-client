@@ -57,16 +57,17 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}      
         id: get_version
         run: |
-          npx semantic-release --dry-run --tag "${{ env.base_version }}"
-
-      - name: Save next release version to environment
-        run: echo "NEXT_VERSION=${{ steps.get_version.outputs.nextRelease.version }}" >> $GITHUB_ENV
-
-      - name: Display next version
-        run: echo "Next version to release is $NEXT_VERSION"          
+          version=$(npx semantic-release --dry-run --tag "${{ env.base_version }}" | grep -oE 'next .* version is ([0-9]+\.[0-9]+\.[0-9]+.*)' | awk '{print $NF}')
+          echo "version=$version" >> $GITHUB_ENV       
 
       - name: Build Docker Image with Version and Commit Hash
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         run: |
-          docker build -t $DOCKER_USERNAME/demo-cicd-client:$NEXT_VERSION-${{ env.commit_hash }} .
+          docker build -t $DOCKER_USERNAME/demo-cicd-client:${{ env.version }}-${{ env.commit_hash }} .
+
+      - name: Build Docker Image with Version and Commit Hash
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        run: |
+          docker build -t $DOCKER_USERNAME/demo-cicd-client:${{ env.version }}-${{ env.commit_hash }} .
