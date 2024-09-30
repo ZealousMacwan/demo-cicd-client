@@ -1,0 +1,32 @@
+{
+  "branches": [
+    { "name": "main", "prerelease": false },    
+    { "name": "dev/**", "prerelease": "dev" }, 
+    { "name": "release/**", "prerelease": "release" } 
+  ],
+  "plugins": [
+    "@semantic-release/commit-analyzer",
+    "@semantic-release/release-notes-generator",
+    "@semantic-release/changelog",
+    "@semantic-release/github",
+    "@semantic-release/git",
+    "@semantic-release/docker"
+  ],
+  "verifyConditions": ["@semantic-release/github", "@semantic-release/docker"],
+  "prepare": [
+    "@semantic-release/changelog",
+    {
+      "path": "@semantic-release/git",
+      "assets": ["CHANGELOG.md"]
+    }
+  ],
+  "publish": [
+    {
+      "path": "@semantic-release/github"
+    },
+    {
+      "path": "@semantic-release/docker",
+      "name": "${DOCKER_USERNAME}/demo-ci-cd-client"
+    }
+  ]
+}

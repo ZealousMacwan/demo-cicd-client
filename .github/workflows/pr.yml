@@ -1,0 +1,40 @@
+name: PR Workflow
+
+on:
+  pull_request:
+    branches:
+      - main
+      - dev/*
+      - release/*
+
+jobs:
+  build:
+    name: Build Docker Image for PR
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Get Git Commit Hash
+        id: vars
+        run: echo "commit_hash=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
+      - name: Get Version from Semantic Release
+        id: get_version
+        run: |
+          version=$(npx semantic-release --dry-run --tag ${base_version}| grep -oP 'next version is \K.*')
+          echo "version=$version" >> $GITHUB_ENV
+
+      - name: Build Docker Image with Version and Commit Hash
+        run: |
+          docker build -t your-dockerhub-username/your-image-name:${{ env.version }}-${{ env.commit_hash }} .
+
