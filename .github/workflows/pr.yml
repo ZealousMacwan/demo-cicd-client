@@ -37,6 +37,7 @@ jobs:
           # Check if it's in the format dev/X.Y.Z (adjust this for release branches)
           if [[ $branch_name =~ dev/([0-9]+\.[0-9]+\.[0-9]+) ]]; then
             base_version="${BASH_REMATCH[1]}"
+            echo "Branch version found: $base_version"
           else
             # Default to 1.0.0 if no specific base version is found
             base_version="1.0.0"
