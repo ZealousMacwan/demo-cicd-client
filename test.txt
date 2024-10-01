@@ -1,4 +1,4 @@
 just for workflow test
 just for workflow test2
 just for workflow test3
-test nightly
+test nightly2
