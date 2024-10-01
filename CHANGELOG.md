@@ -1,3 +1,10 @@
+# [1.0.0-dev.2](https://github.com/ZealousMacwan/demo-cicd-client/compare/v1.0.0-dev.1...v1.0.0-dev.2) (2024-10-01)
+
+
+### Features
+
+* test-feature ([a1d0f80](https://github.com/ZealousMacwan/demo-cicd-client/commit/a1d0f8049f564c678bdd35d73e36a3da3aacef41))
+
 # 1.0.0-dev.1 (2024-09-30)
 
 
